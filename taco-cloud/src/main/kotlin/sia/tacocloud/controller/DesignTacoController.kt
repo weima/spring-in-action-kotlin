@@ -1,9 +1,9 @@
 package sia.tacocloud.controller
 
-import lombok.extern.slf4j.Slf4j
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import sia.tacocloud.model.Ingredient
 import sia.tacocloud.model.Ingredient.Type
@@ -11,10 +11,11 @@ import sia.tacocloud.model.Taco
 import java.util.*
 
 
-@Slf4j
 @Controller
 @RequestMapping("/design")
 class DesignTacoController {
+    private val log = org.slf4j.LoggerFactory.getLogger(DesignTacoController::class.java)
+
     private fun filterByType(
             ingredients: List<Ingredient>, type: Type): List<Ingredient> {
         return ingredients.filter { (_, _, type1) -> type1 == type }.toList()
@@ -44,5 +45,11 @@ class DesignTacoController {
         }
         model.addAttribute("design", Taco())
         return "design"
+    }
+
+    @PostMapping
+    fun processDesign(design: Taco): String {
+        log.info("Processing design: $design")
+        return "redirect:/orders/current"
     }
 }
